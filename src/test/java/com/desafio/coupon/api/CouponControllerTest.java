@@ -3,6 +3,12 @@ package com.desafio.coupon.api;
 import com.desafio.coupon.domain.CouponStatus;
 import com.desafio.coupon.infra.CouponEntity;
 import com.desafio.coupon.infra.CouponRepository;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +26,8 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Epic("Gerenciamento de Cupons")
+@Feature("API de Cupom")
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
@@ -39,6 +47,9 @@ class CouponControllerTest {
     // ─── POST ───────────────────────────────────────────
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 201 ao criar cupom com dados válidos")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldCreateCouponSuccessfully() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -58,6 +69,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 201 e code sanitizado ao enviar caracteres especiais")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldSanitizeCodeOnCreate() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,6 +89,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 400 quando discountValue for menor que 0.5")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldRejectDiscountValueBelowMinimum() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -91,6 +108,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 400 quando expirationDate estiver no passado")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldRejectExpirationDateInThePast() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -107,6 +127,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 201 com published true ao criar cupom já publicado")
+    @Severity(SeverityLevel.NORMAL)
     void shouldCreateCouponAsPublished() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -124,6 +147,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 400 quando o campo code não for informado")
+    @Severity(SeverityLevel.NORMAL)
     void shouldRejectRequestWithMissingCode() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -139,6 +165,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 400 quando o campo description não for informado")
+    @Severity(SeverityLevel.NORMAL)
     void shouldRejectRequestWithMissingDescription() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -154,6 +183,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 400 quando o campo discountValue não for informado")
+    @Severity(SeverityLevel.NORMAL)
     void shouldRejectRequestWithMissingDiscountValue() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -169,6 +201,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 400 quando o campo expirationDate não for informado")
+    @Severity(SeverityLevel.NORMAL)
     void shouldRejectRequestWithMissingExpirationDate() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -184,6 +219,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 400 quando o body estiver vazio")
+    @Severity(SeverityLevel.NORMAL)
     void shouldRejectRequestWithAllFieldsMissing() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -192,6 +230,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar 201 com discountValue igual a 0.5 (valor mínimo permitido)")
+    @Severity(SeverityLevel.NORMAL)
     void shouldAcceptDiscountValueAboveMinimumBoundary() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -209,6 +250,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve retornar todos os campos esperados na resposta de criação")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldReturnAllFieldsOnCreate() throws Exception {
         mockMvc.perform(post("/coupon")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -235,6 +279,9 @@ class CouponControllerTest {
     // ─── GET ───────────────────────────────────────────
 
     @Test
+    @Story("Buscar cupom")
+    @Description("Deve retornar 200 com dados do cupom ao buscar por ID existente")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldFindCouponById() throws Exception {
         CouponEntity entity = buildEntity(CouponStatus.ACTIVE);
         repository.save(entity);
@@ -246,6 +293,9 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Buscar cupom")
+    @Description("Deve retornar 404 ao buscar cupom com ID inexistente")
+    @Severity(SeverityLevel.NORMAL)
     void shouldReturnNotFoundWhenCouponDoesNotExist() throws Exception {
         mockMvc.perform(get("/coupon/{id}", UUID.randomUUID()))
                 .andExpect(status().isNotFound());
@@ -254,6 +304,9 @@ class CouponControllerTest {
     // ─── DELETE ───────────────────────────────────────────
 
     @Test
+    @Story("Deletar cupom")
+    @Description("Deve retornar 204 ao deletar cupom existente")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldDeleteCouponSuccessfully() throws Exception {
         CouponEntity entity = buildEntity(CouponStatus.ACTIVE);
         repository.save(entity);
@@ -263,12 +316,18 @@ class CouponControllerTest {
     }
 
     @Test
+    @Story("Deletar cupom")
+    @Description("Deve retornar 404 ao deletar cupom com ID inexistente")
+    @Severity(SeverityLevel.NORMAL)
     void shouldReturnNotFoundWhenDeletingNonExistentCoupon() throws Exception {
         mockMvc.perform(delete("/coupon/{id}", UUID.randomUUID()))
                 .andExpect(status().isNotFound());
     }
 
     @Test
+    @Story("Deletar cupom")
+    @Description("Deve retornar 409 ao deletar cupom já deletado")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldReturnConflictWhenDeletingAlreadyDeletedCoupon() throws Exception {
         CouponEntity entity = buildEntity(CouponStatus.DELETED);
         repository.save(entity);

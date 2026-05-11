@@ -7,6 +7,12 @@ import com.desafio.coupon.domain.CouponStatus;
 import com.desafio.coupon.infra.CouponEntity;
 import com.desafio.coupon.infra.CouponMapper;
 import com.desafio.coupon.infra.CouponRepository;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@Epic("Gerenciamento de Cupons")
+@Feature("Serviço de Cupom")
 @ExtendWith(MockitoExtension.class)
 class CouponServiceTest {
 
@@ -39,6 +47,9 @@ class CouponServiceTest {
     private final Instant futureDate = Instant.now().plus(10, ChronoUnit.DAYS);
 
     @Test
+    @Story("Criar cupom")
+    @Description("Deve criar e persistir cupom com sucesso")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldCreateCouponSuccessfully() {
         CreateCouponRequest request = new CreateCouponRequest(
                 "ABC123", "description", new BigDecimal("0.8"), futureDate, false
@@ -61,6 +72,9 @@ class CouponServiceTest {
     }
 
     @Test
+    @Story("Buscar cupom")
+    @Description("Deve retornar cupom ao buscar por ID existente")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldFindCouponByIdSuccessfully() {
         UUID id = UUID.randomUUID();
         CouponEntity entity = new CouponEntity();
@@ -85,6 +99,9 @@ class CouponServiceTest {
     }
 
     @Test
+    @Story("Buscar cupom")
+    @Description("Deve lançar exceção ao buscar cupom com ID inexistente")
+    @Severity(SeverityLevel.NORMAL)
     void shouldThrowWhenCouponNotFoundOnGet() {
         UUID id = UUID.randomUUID();
         when(repository.findById(id)).thenReturn(Optional.empty());
@@ -93,6 +110,9 @@ class CouponServiceTest {
     }
 
     @Test
+    @Story("Deletar cupom")
+    @Description("Deve persistir cupom com status DELETED ao deletar")
+    @Severity(SeverityLevel.CRITICAL)
     void shouldDeleteCouponSuccessfully() {
         UUID id = UUID.randomUUID();
         CouponEntity entity = new CouponEntity();
@@ -112,6 +132,9 @@ class CouponServiceTest {
     }
 
     @Test
+    @Story("Deletar cupom")
+    @Description("Deve lançar exceção ao deletar cupom com ID inexistente")
+    @Severity(SeverityLevel.NORMAL)
     void shouldThrowWhenCouponNotFoundOnDelete() {
         UUID id = UUID.randomUUID();
         when(repository.findById(id)).thenReturn(Optional.empty());
